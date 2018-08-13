@@ -1,28 +1,22 @@
 <template>
   <el-row :gutter="10">
   <h2 align="center">Find your daily expense</h2>
-  <el-col :span="5">
+  <el-col :span="7">
     <el-card shadow="always" align="center">
       <h4>Total Expense</h4>
-			<p>{{totalExpense}}</p>
+			<p>${{totalExpense}}</p>
     </el-card>
   </el-col>
-  <el-col :span="5">
-    <el-card shadow="hover" align="center">
-      <h4>Monthly Expense</h4>
-      <p>{{monthlyExpense}}</p>
-    </el-card>
-  </el-col>
-  <el-col :span="5">
+  <el-col :span="7">
     <el-card shadow="never" align="center">
-      <h4>Average Expense</h4>
-      <p>{{avgExpense}}</p>
+      <h4>Daily Expense</h4>
+      <p>${{avgExpense}}</p>
     </el-card>
   </el-col>
-  <el-col :span="5">
+  <el-col :span="7">
     <el-card shadow="never" align="center">
-      <h4>This Month Expense</h4>
-      <p>{{thisMonth}} <span class="subp">{{sign}}{{lastMonth}}</span></p>
+      <h4>Current Month Expense</h4>
+      <p>${{thisMonth}} <span class="subp">{{sign}}{{lastMonth}}</span></p>
     </el-card>
   </el-col>
   </el-row>
@@ -35,7 +29,6 @@ export default {
   data() {
     return {
       totalExpense: 0,
-      monthlyExpense: 0,
       avgExpense: 0,
       thisMonth: 0,
       lastMonth: 0,
@@ -68,17 +61,16 @@ export default {
     this.$root.Bus.$on('listChange', ExpenseList => {
       this.totalExpense = 0;
       this.thisMonth = 0;
-      this.monthlyExpense = 0;
       this.avgExpense = 0;
+      this.lastMonth = 0;
       this.sign = '';
 
-      let visits = 0, lastMonth = 0, now = new Date(), months = [];
+      let visits = 0, lastMonth = 0, now = new Date();
       let currentMonthDate = new Date().toISOString().substring(0, 7);
       let lastMonthDate = new Date(now.getFullYear(),now.getMonth()-1,now.getDate()).toISOString().substring(0, 7);
 
       ExpenseList.map((val) => {
         this.totalExpense += parseInt(val.expense);
-        if (months.indexOf(val.date) <= -1) months.push(val.date);
 
         now = new Date(val.date);
         if (now.toISOString().substring(0, 7) === currentMonthDate) {
@@ -92,7 +84,6 @@ export default {
 
       if (ExpenseList.length > 0) {
         let diff = this.thisMonth - lastMonth;
-        this.monthlyExpense = this.formatNumber(this.totalExpense / months.length, 2, 0);
         this.sign = diff > 0 ? '+' : (diff === 0 ? '' : '-');
         this.lastMonth = this.formatPercentage(lastMonth === 0 ? this.thisMonth : Math.abs(diff) / lastMonth, 1);
         this.avgExpense = this.formatNumber(this.totalExpense / visits, 2, 0);
