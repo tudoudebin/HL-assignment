@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import moment from 'moment-timezone'
+
 export default {
   name: "ExpensesInput",
   data() {
@@ -54,7 +56,7 @@ export default {
       }
       let payload = {
         id: Date.now(), // id uses current timestamp
-        date: new Date(this.currentDate).toISOString().substring(0, 10),
+        date: moment.tz(this.currentDate, "Asia/Singapore").format().substring(0, 10),
         expense: this.currentExpense,
         purpose: this.purpose,
       }
