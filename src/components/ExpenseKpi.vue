@@ -9,7 +9,7 @@
   </el-col>
   <el-col :span="7">
     <el-card shadow="never" align="center">
-      <h4>Daily Expense</h4>
+      <h4>Average Expense</h4>
       <p>${{avgExpense}}</p>
     </el-card>
   </el-col>
